@@ -9,10 +9,10 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-@RequiredArgsConstructor
 @AllArgsConstructor
-@NoArgsConstructor
+@RequiredArgsConstructor
 @Entity
+@Table(name = "delivery_table")
 public class Delivery
 {
     @Id
@@ -22,8 +22,9 @@ public class Delivery
 
     @Column(nullable = false)
     @OneToMany
+    @ToString.Exclude
     private List<Trip> trips;
 
     @Column(nullable = false)
-    private double costOfDelivery;
+    private double costOfDel;
 }

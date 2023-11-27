@@ -4,13 +4,13 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Builder
-@Entity
 @Getter
 @Setter
 @ToString
-@RequiredArgsConstructor
 @AllArgsConstructor
-@NoArgsConstructor
+@RequiredArgsConstructor
+@Entity
+@Table(name = "trip_table")
 public class Trip
 {
     @Id

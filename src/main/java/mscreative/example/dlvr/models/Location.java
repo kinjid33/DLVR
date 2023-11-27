@@ -2,20 +2,23 @@ package mscreative.example.dlvr.models;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.proxy.HibernateProxy;
+
+import java.util.Objects;
 
 @Builder
-@Entity
 @Getter
 @Setter
 @ToString
-@RequiredArgsConstructor
 @AllArgsConstructor
-@NoArgsConstructor
+@RequiredArgsConstructor
+@Entity
+@Table(name = "location_table")
 public class Location
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "location_id", nullable = false)
+    @Column(name = "location_id")
     private Long id;
 
     @Column(nullable = false)
