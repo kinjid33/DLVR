@@ -26,7 +26,10 @@ public class User implements UserDetails
     private Long id;
 
     @Column(nullable = false)
-    private String name;
+    private String firstname;
+
+    @Column(nullable = false)
+    private String lastname;
 
     @Column(nullable = false)
     private String email;
