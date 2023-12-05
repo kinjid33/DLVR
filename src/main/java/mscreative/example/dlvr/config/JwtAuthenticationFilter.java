@@ -5,6 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import mscreative.example.dlvr.repositories.TokenRepo;
 import mscreative.example.dlvr.services.JwtService;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,6 +24,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter
 {
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
+    private final TokenRepo tokenRepo;
     @Override
     protected void doFilterInternal
             (
@@ -48,7 +50,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter
         {
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
 
-            if(jwtService.isTokenValid(token, userDetails))
+            boolean isTokenValid = tokenRepo.findByToken(token).map(t -> !t.isExpired() && !t.isRevoked())
+                    .orElse(false);
+
+            if(jwtService.isTokenValid(token, userDetails) && isTokenValid)
             {
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails,
