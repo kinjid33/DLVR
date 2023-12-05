@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import mscreative.example.dlvr.dto.request.AuthenticationRequest;
 import mscreative.example.dlvr.dto.request.RegisterRequest;
 import mscreative.example.dlvr.dto.response.AuthenticationResponse;
+import mscreative.example.dlvr.dto.response.RegisterResponse;
+import mscreative.example.dlvr.enums.RegisterStatus;
 import mscreative.example.dlvr.enums.Role;
 import mscreative.example.dlvr.enums.TokenType;
 import mscreative.example.dlvr.models.Token;
@@ -29,8 +31,15 @@ public class AuthenticationServiceImpl implements AuthenticationService
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     @Override
-    public AuthenticationResponse register(RegisterRequest registerRequest)
+    public RegisterResponse register(RegisterRequest registerRequest)
     {
+        boolean existsIndb = userRepo.existsByEmail(registerRequest.getEmail());
+
+        if(existsIndb)
+        {
+            throw new IllegalStateException();
+        }
+
         User user = User.builder()
                 .firstname(registerRequest.getFirstname())
                 .lastname(registerRequest.getLastname())
@@ -38,14 +47,17 @@ public class AuthenticationServiceImpl implements AuthenticationService
                 .password(passwordEncoder.encode(registerRequest.getPassword()))
                 .role(Role.USER)
                 .build();
-        User savedUser = userRepo.save(user);
 
-        String jwtToken = jwtService.generateToken(user);
+        userRepo.save(user);
+//        User savedUser = userRepo.save(user);
 
-        saveUserToken(savedUser, jwtToken);
 
-        return AuthenticationResponse.builder()
-                .token(jwtToken)
+//        String jwtToken = jwtService.generateToken(user);
+
+//        saveUserToken(savedUser, jwtToken);
+
+        return RegisterResponse.builder()
+                .status(RegisterStatus.SUCCESSFUL)
                 .build();
     }
 
