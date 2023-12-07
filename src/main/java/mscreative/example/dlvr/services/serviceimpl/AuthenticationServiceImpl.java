@@ -37,7 +37,10 @@ public class AuthenticationServiceImpl implements AuthenticationService
 
         if(existsIndb)
         {
-            throw new IllegalStateException();
+//            throw new IllegalStateException();
+            return RegisterResponse.builder()
+                    .status(RegisterStatus.FAILED)
+                    .build();
         }
 
         User user = User.builder()
